@@ -2,6 +2,11 @@ openapi: 3.0.0
 info:
   title: webstoreapi
   version: '1.0'
+  contact:
+    name: Tobi Tögel
+    url: www.tögel.com
+    email: tobias.toegel@gmx.de
+  description: API for webstore application as part of the mobile applications course.
 servers:
   - url: 'http://localhost:3000'
 paths:
@@ -77,14 +82,22 @@ paths:
                 dateOfBirth:
                   type: string
                   format: date
+                username:
+                  type: string
+                password:
+                  type: string
               required:
                 - firstName
                 - lastName
                 - email
                 - dateOfBirth
+                - username
+                - password
             examples:
               Create User Bob Fellow:
                 value:
+                  username: fellowbob
+                  password: bobfellow
                   firstName: Bob
                   lastName: Fellow
                   email: bob.fellow@gmail.com
@@ -113,6 +126,23 @@ paths:
                   type: string
                 password:
                   type: string
+              required:
+                - username
+                - password
+    get:
+      summary: ''
+      operationId: get-login
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: Unauthorized
+      description: Post the user login information to server to check if user is authorized to login.
+      parameters:
+        - schema:
+            type: string
+          in: header
+          name: Authorization
   /items:
     get:
       summary: Your GET endpoint
@@ -128,7 +158,9 @@ paths:
               schema:
                 type: object
                 properties: {}
-      operationId: get-item
+        '400':
+          description: Bad Request
+      operationId: get-store-item
       description: Get information of items that are being sold on the webstore
       requestBody:
         content:
@@ -136,16 +168,33 @@ paths:
             schema:
               type: object
             examples: {}
-      parameters: []
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: category
+          description: Search and list according to category given by user
+        - schema:
+            type: string
+          in: query
+          name: location
+          description: Search and list according to location given by user
+        - schema:
+            type: string
+          in: query
+          name: date of posting
+          description: Search and list according to Date of posting given by user
     post:
       summary: ''
-      operationId: post-item
+      operationId: post-store-item
       responses:
         '201':
           description: Created
         '400':
           description: Bad Request (missing information?)
           headers: {}
+        '401':
+          description: Unauthorized
       description: Create new item to sell in the webstore.
       parameters: []
       requestBody:
@@ -156,28 +205,72 @@ paths:
           application/xml:
             schema:
               $ref: '#/components/schemas/item'
-    delete:
-      summary: ''
-      operationId: delete-item
-      responses:
-        '200':
-          description: OK
-      description: Remove item from the webstore.
+    parameters: []
     put:
       summary: ''
-      operationId: put-item
+      operationId: put-items
       responses:
         '200':
           description: OK
         '400':
           description: Bad Request
-      description: Edit posting of item that is being sold.
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       requestBody:
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/item'
-    parameters: []
+  '/items/{itemId}':
+    parameters:
+      - schema:
+          type: string
+        name: itemId
+        in: path
+        required: true
+        description: Id of an existing item.
+    delete:
+      summary: ''
+      operationId: delete-items-itemId
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+      description: Delete item from Webstore
+    put:
+      summary: ''
+      operationId: put-items-itemId
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/item'
+      description: Edit existing item in Webstore
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/item'
+    get:
+      summary: ''
+      operationId: get-items-itemId
+      responses:
+        '200':
+          description: OK
+      parameters: []
 components:
   schemas:
     User:
@@ -238,7 +331,7 @@ components:
         price:
           type: number
         date:
-          type: number
+          type: string
         delivery type:
           type: string
         seller username:
@@ -247,4 +340,16 @@ components:
           type: string
         location:
           type: string
+      required:
+        - id
+        - title
+        - category
+        - images
+        - price
+        - date
+        - delivery type
+        - seller username
+        - seller contact
+        - location
+      description: ''
   securitySchemes: {}
