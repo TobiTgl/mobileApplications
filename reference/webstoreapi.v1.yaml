@@ -106,29 +106,6 @@ paths:
       description: Create a new user.
     parameters: []
   /login:
-    post:
-      summary: ''
-      operationId: post-login
-      responses:
-        '200':
-          description: OK
-        '401':
-          description: Unauthorized
-      description: Post the user login information to server to check if user is authorized to login.
-      parameters: []
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                username:
-                  type: string
-                password:
-                  type: string
-              required:
-                - username
-                - password
     get:
       summary: ''
       operationId: get-login
@@ -138,11 +115,9 @@ paths:
         '401':
           description: Unauthorized
       description: Post the user login information to server to check if user is authorized to login.
-      parameters:
-        - schema:
-            type: string
-          in: header
-          name: Authorization
+      parameters: []
+      security:
+        - httpBasic: []
   /items:
     get:
       summary: Your GET endpoint
@@ -205,6 +180,8 @@ paths:
           application/xml:
             schema:
               $ref: '#/components/schemas/item'
+      security:
+        - jwt: []
     parameters: []
     put:
       summary: ''
@@ -223,6 +200,8 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/item'
+      security:
+        - jwt: []
   '/items/{itemId}':
     parameters:
       - schema:
@@ -242,6 +221,8 @@ paths:
         '404':
           description: Not Found
       description: Delete item from Webstore
+      security:
+        - httpBasic: []
     put:
       summary: ''
       operationId: put-items-itemId
@@ -264,6 +245,8 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/item'
+      security:
+        - jwt: []
     get:
       summary: ''
       operationId: get-items-itemId
@@ -352,4 +335,10 @@ components:
         - seller contact
         - location
       description: ''
-  securitySchemes: {}
+  securitySchemes:
+    httpBasic:
+      type: http
+      scheme: basic
+    jwt:
+      type: http
+      scheme: bearer
