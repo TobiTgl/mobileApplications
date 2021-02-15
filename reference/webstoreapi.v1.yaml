@@ -228,12 +228,17 @@ paths:
       security:
         - jwt: []
     get:
-      summary: ''
+      summary: Get single Item
       operationId: get-items-itemId
       responses:
         '200':
           description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/item'
       parameters: []
+      description: Get single item
 components:
   schemas:
     User:
