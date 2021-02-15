@@ -106,16 +106,15 @@ paths:
       description: Create a new user.
     parameters: []
   /login:
-    get:
+    post:
       summary: ''
-      operationId: get-login
+      operationId: post-login
       responses:
         '200':
           description: OK
         '401':
           description: Unauthorized
       description: Post the user login information to server to check if user is authorized to login.
-      parameters: []
       security:
         - httpBasic: []
   /items:
@@ -183,25 +182,6 @@ paths:
       security:
         - jwt: []
     parameters: []
-    put:
-      summary: ''
-      operationId: put-items
-      responses:
-        '200':
-          description: OK
-        '400':
-          description: Bad Request
-        '401':
-          description: Unauthorized
-        '404':
-          description: Not Found
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/item'
-      security:
-        - jwt: []
   '/items/{itemId}':
     parameters:
       - schema:
