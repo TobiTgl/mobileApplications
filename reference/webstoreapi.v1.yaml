@@ -42,6 +42,8 @@ paths:
           description: User Not Found
       operationId: get-users-userId
       description: Retrieve the information of the user with the matching user ID.
+      security:
+        - httpBasic: []
   /register:
     post:
       summary: Create New User
@@ -136,12 +138,6 @@ paths:
           description: Bad Request
       operationId: get-store-item
       description: Get information of items that are being sold on the webstore
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-            examples: {}
       parameters:
         - schema:
             type: string
