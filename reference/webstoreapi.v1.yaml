@@ -8,7 +8,7 @@ info:
     email: tobias.toegel@gmx.de
   description: API for webstore application as part of the mobile applications course.
 servers:
-  - url: 'http://localhost:3000'
+  - url: 'https://mobileappapiwebstore.herokuapp.com/'
 paths:
   '/users/{userId}':
     parameters:
