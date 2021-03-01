@@ -4,7 +4,6 @@ info:
   version: '1.0'
   contact:
     name: Tobi Tögel
-    url: www.tögel.com
     email: tobias.toegel@gmx.de
   description: API for webstore application as part of the mobile applications course.
 servers:
@@ -29,15 +28,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/User'
               examples:
-                Get User Alice Smith:
+                Get User:
                   value:
-                    id: 142
-                    firstName: Alice
-                    lastName: Smith
-                    email: alice.smith@gmail.com
-                    dateOfBirth: '1997-10-31'
-                    emailVerified: true
-                    signUpDate: '2019-08-24'
+                    username: testest
+                    password: testest
+                    email: testest@example.com
         '404':
           description: User Not Found
       operationId: get-users-userId
@@ -75,25 +70,15 @@ paths:
             schema:
               type: object
               properties:
-                firstName:
-                  type: string
-                lastName:
+                username:
                   type: string
                 email:
-                  type: string
-                dateOfBirth:
-                  type: string
-                  format: date
-                username:
                   type: string
                 password:
                   type: string
               required:
-                - firstName
-                - lastName
-                - email
-                - dateOfBirth
                 - username
+                - email
                 - password
             examples:
               Create User Bob Fellow:
@@ -130,6 +115,20 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/item'
+              examples:
+                example-1:
+                  value:
+                    id: 907bdaae-525a-41d2-9861-eb9c6b48300e
+                    userId: '3'
+                    title: test title
+                    category: test
+                    images: 'https://res.cloudinary.com/tobitgl/image/upload/v1614186732/5bc916ecf810ec3fba58a63d528a3766.png'
+                    price: '200'
+                    date: '2020-01-25T00:00:00'
+                    deliveryType: test type
+                    sellerUsername: test username
+                    sellerContact: test contact
+                    location: test location
             application/xml:
               schema:
                 type: object
@@ -233,8 +232,55 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/item'
+              examples:
+                example posting:
+                  value:
+                    id: 907bdaae-525a-41d2-9861-eb9c6b48300e
+                    userId: '3'
+                    title: test title
+                    category: test
+                    images: 'https://res.cloudinary.com/tobitgl/image/upload/v1614186732/5bc916ecf810ec3fba58a63d528a3766.png'
+                    price: '200'
+                    date: '2020-01-25T00:00:00'
+                    deliveryType: test type
+                    sellerUsername: test username
+                    sellerContact: test contact
+                    location: test location
       parameters: []
       description: Get single item
+  /loginForJWT:
+    get:
+      summary: 'Login an get Json webtoken as a response needed for e.g. posting, deleting postings'
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  token:
+                    type: string
+                    minLength: 1
+                    example: '"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoxLCJlbWFpbCI6InRlc3RlckBtYWlsLmNvbSJ9LCJpYXQiOjE2MTQ1ODQ0MzgsImV4cCI6MTYxNDY3MDgzOH0.bw-TzZRBidMUtDeCNo67zWMpuUk2ZsFoCDlfuSGcA1g"'
+                required:
+                  - token
+              examples:
+                example token:
+                  value:
+                    token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoxLCJlbWFpbCI6InRlc3RlckBtYWlsLmNvbSJ9LCJpYXQiOjE2MTQ1ODQ0MzgsImV4cCI6MTYxNDY3MDgzOH0.bw-TzZRBidMUtDeCNo67zWMpuUk2ZsFoCDlfuSGcA1g"
+            application/xml:
+              schema:
+                type: object
+                properties: {}
+        '401':
+          description: Unauthorized
+      operationId: get-loginForJWT
+      security:
+        - httpBasic: []
+      description: 'Login an get Json webtoken as a response needed for e.g. posting, deleting postings'
 components:
   schemas:
     User:
@@ -254,30 +300,17 @@ components:
         id:
           type: integer
           description: Unique identifier for the given user.
-        firstName:
-          type: string
-        lastName:
+        userName:
           type: string
         email:
           type: string
           format: email
-        dateOfBirth:
+        password:
           type: string
-          format: date
-          example: '1997-10-31'
-        emailVerified:
-          type: boolean
-          description: Set to true if the user's email has been verified.
-        createDate:
-          type: string
-          format: date
-          description: The date that the user was created.
       required:
         - id
-        - firstName
-        - lastName
+        - userName
         - email
-        - emailVerified
     item:
       title: item
       type: object
